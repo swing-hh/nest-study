@@ -1,31 +1,19 @@
-import { Controller, Get, Req, Post, HttpCode, Header, Redirect, Param, HttpStatus} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { get } from 'http';
+import { Controller, Get, Post, Body } from '@nestjs/common';
+import { CreateCatDto } from './dto/create-cat.dto';
+import { CatsService } from './cats.service'; // 引入这个服务基类
+import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
 export class CatsController {
-  @Get(':id')
-  // @HttpCode(204)
-  // @Header('Cache-Control', 'none')
-  // @Redirect('https://nestjs.com', 301)
-  async Get (@Param('id') id): Promise<any[]> {
-    const p = new Promise(
-      function (resolve, reject) {
-        setTimeout(()=>{
-          // 一段耗时的异步操作
-          resolve('成功') // 数据处理完成
-          // reject('失败')
-        }, 5000)
-         // 数据处理出错
-      }
-    )
-    const a = await p.then();
-    console.log(a)
-    return [a];
+  constructor(private readonly catsService: CatsService) {} // 通过函数依赖注入，私有只读的catsService的实例解析
+
+  @Post()
+  async create(@Body() createCatDto: CreateCatDto) { // @body体
+    this.catsService.create(createCatDto); // 调用基类的方法
   }
 
-  @Post('name')
-  Post (): string {
-    return 'post name'
+  @Get()
+  async findAll(): Promise<Cat[]> {
+    return this.catsService.findAll(); // 调用基类的方法
   }
 }
