@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { CatsController } from './cats/cats.controller';
-import { CatsService } from './cats/cats.service';
+import { CatsModule } from './cats/cats.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController, CatsController],
-  providers: [CatsService] // module中增加一个服务提供者
+  imports: [CatsModule], // 导入这个二级模块
+  controllers: [AppController] // module中增加一个服务提供者
 })
 export class AppModule {}
